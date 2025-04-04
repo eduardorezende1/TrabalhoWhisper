@@ -1,14 +1,18 @@
-FROM python:3.13.0-alpine
-
-ARG GRADIO_SERVER_PORT=7861
-ENV GRADIO_SERVER_PORT=${GRADIO_SERVER_PORT}
+FROM python:3.10-slim
 
 WORKDIR /workspace
 
-ADD requirements.txt app-gradio.py /workspace/
+# Dependências mínimas para compilar websockets
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3-dev \
+    libffi-dev \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install -r /workspace/requirements.txt
+COPY . /workspace/
+
+RUN pip install --no-cache-dir -r /workspace/requirements.txt
 
 EXPOSE 7861
-
 CMD ["python", "/workspace/app-gradio.py"]

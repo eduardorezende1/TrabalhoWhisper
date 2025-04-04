@@ -1,7 +1,0 @@
-fastapi
-pydantic
-gunicorn
-uvicorn
-python-multipart
-numpy
-pillow

@@ -3,7 +3,7 @@ import requests
 import json
 
 def envia(audio):
-    url = "http://backend-files:9000/asr/"
+    url = "http://backend:9000/asr/"
     with open(audio,'rb') as f:
         r = requests.post(url, files={"audio_file": f})
     return r.content

@@ -1,73 +1,18 @@
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Docker Compose reference guide at
-# https://docs.docker.com/go/compose-spec-reference/
+version: "3.8"
 
-# Here the instructions define your application as a service called "server".
-# This service is built from the Dockerfile in the current directory.
-# You can add other services your application may depend on here, such as a
-# database or a cache. For examples, see the Awesome Compose repository:
-# https://github.com/docker/awesome-compose
 services:
-  gradio-service:
-    build:
-      context: gradio-json
-      dockerfile: Dockerfile 
+  backend:
+    build: ./backend-files
     ports:
-      - 7860:7860
+      - "9000:9000"
     volumes:
-      - /work
+      - ./backend-files:/app
 
-  gradio-image:
-    build:
-      context: gradio-image
-      dockerfile: Dockerfile 
+  frontend:
+    build: ./gradio-files
     ports:
-      - 7862:7860
+      - "7861:7861"
     volumes:
-      - /work
-
-  gradio-files:
-    build:
-      context: gradio-files
-      dockerfile: Dockerfile
-    ports:
-      - 7861:7861
-    develop:
-      watch:
-      - action: sync
-        path: ./app-gradio.py
-        target: /workspace/app-gradio.py
-    volumes:
-      - /workspace
-
-  backend-json:
-    build:
-      context: backend-json
-      dockerfile: Dockerfile 
-    ports:
-      - 8080:8080
-    volumes:
-      - /code
-
-  backend-image:
-    build:
-      context: backend-image
-      dockerfile: Dockerfile 
-    ports:
-      - 8081:9001
-    volumes:
-      - /code
-
-  backend-files:
-    build:
-      context: backend-files
-      dockerfile: Dockerfile
-    ports: 
-      - 9000:9000
-    develop:
-      watch:
-      - action: sync
-        path: ./backend-files/app/webservice.py
-        target: /app/webservice.py
-    volumes:
-      - /app
+      - ./gradio-files:/workspace
+    depends_on:
+      - backend
